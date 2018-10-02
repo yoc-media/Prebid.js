@@ -11,6 +11,7 @@ import { processNativeAdUnitParams } from 'src/native';
 import { isValid } from 'src/adapters/bidderFactory';
 import events from 'src/events';
 import includes from 'core-js/library/fn/array/includes';
+import find from 'core-js/library/fn/array/find';
 import { S2S_VENDORS } from './config.js';
 
 const getConfig = config.getConfig;
@@ -351,6 +352,21 @@ const LEGACY_PROTOCOL = {
   }
 };
 
+function getNativeImgId(type) {
+  return ({
+    'icon': 1,
+    'image': 3
+  })[type];
+}
+
+function getNativeDataId(type) {
+  return ({
+    sponsoredBy: 1,
+    body: 2,
+    cta: 12
+  })[type];
+}
+
 /*
  * Protocol spec for OpenRTB endpoint
  * e.g., https://<prebid-server-url>/v1/openrtb2/auction
@@ -428,10 +444,7 @@ const OPEN_RTB_PROTOCOL = {
                 if (
                   (type === 'image' || type === 'icon')
                 ) {
-                  let imgTypeId = ({
-                    'icon': 1,
-                    'image': 3
-                  })[type];
+                  let imgTypeId = getNativeImgId(type);
 
                   if (Array.isArray(params.sizes)) {
                     let sizes = params.sizes;
@@ -464,12 +477,7 @@ const OPEN_RTB_PROTOCOL = {
                     }
                   }));
                 } else {
-                  let dataAssetTypeId = ({
-                    sponsoredBy: 1,
-                    body: 2,
-                    cta: 12,
-                    // TODO: clickUrl in request object?
-                  })[type];
+                  let dataAssetTypeId = getNativeDataId(type);
                   if (dataAssetTypeId) {
                     assets.push(newAsset({
                       data: {
@@ -589,6 +597,42 @@ const OPEN_RTB_PROTOCOL = {
             if (bid.nurl) { bidObject.vastUrl = bid.nurl; }
           } else if (utils.deepAccess(bid, 'ext.prebid.type') === NATIVE) {
             bidObject.mediaType = NATIVE;
+            if (typeof bid.adm === 'string') {
+              bidObject.adm = JSON.parse(bid.adm);
+            } else {
+              bidObject.adm = bid.adm;
+            }
+
+            if (utils.isPlainObject(bid.adm) && Array.isArray(bid.adm.assets)) {
+              bidObject.native = utils.cleanObj({
+                image: utils.pick(
+                  utils.deepAccess(find(bid.adm.assets, asset => asset.img && asset.img.type === getNativeImgId('image')), 'img'),
+                  ['url', 'w as width', 'h as height']
+                ),
+                icon: utils.pick(
+                  utils.deepAccess(find(bid.adm.assets, asset => asset.img && asset.img.type === getNativeImgId('icon')), 'img'),
+                  ['url', 'w as width', 'h as height']
+                ),
+                title: utils.deepAccess(
+                  find(bid.adm.assets, asset => asset.title),
+                  'title.text'
+                ),
+                body: utils.deepAccess(
+                  find(bid.adm.assets, asset => asset.data && asset.data.type === getNativeDataId('body')),
+                  'data.value'
+                ),
+                sponsoredBy: utils.deepAccess(
+                  find(bid.adm.assets, asset => asset.data && asset.data.type === getNativeDataId('sponsoredBy')),
+                  'data.value'
+                ),
+                clickUrl: bid.adm.link,
+                clickTrackers: bid.adm.clickTrackers,
+                impressionTrackers: bid.adm.impressionTrackers,
+                javascriptTrackers: bid.adm.javascriptTrackers
+              });
+            } else {
+              utils.logError('prebid server native response contained no assets');
+            }
           } else { // banner
             if (bid.adm && bid.nurl) {
               bidObject.ad = bid.adm;
