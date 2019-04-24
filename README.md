@@ -1,4 +1,4 @@
-[![Build Status](https://circleci.com/gh/prebid/Prebid.js.svg?style=svg)](https://circleci.com/gh/prebid/Prebid.js)
+[![Basdasdsaduild Status](https://circleci.com/gh/prebid/Prebid.js.svg?style=svg)](https://circleci.com/gh/prebid/Prebid.js)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/prebid/Prebid.js.svg)](http://isitmaintained.com/project/prebid/Prebid.js "Percentage of issues still open")
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/prebid/Prebid.js.svg)](http://isitmaintained.com/project/prebid/Prebid.js "Average time to resolve an issue")
 [![Code Climate](https://codeclimate.com/github/prebid/Prebid.js/badges/gpa.svg)](https://codeclimate.com/github/prebid/Prebid.js)
@@ -26,52 +26,53 @@ Working examples can be found in [the developer docs](http://prebid.org/dev-docs
 
 ## Usage (as a npm dependency)
 
-*Note:* Requires Prebid.js v1.38.0+
+_Note:_ Requires Prebid.js v1.38.0+
 
-Prebid.js depends on Babel and some Babel Plugins in order to run correctly in the browser.  Here are some examples for 
+Prebid.js depends on Babel and some Babel Plugins in order to run correctly in the browser. Here are some examples for
 configuring webpack to work with Prebid.js.
 
 With Babel 7:
+
 ```javascript
 // webpack.conf.js
-let path = require('path');
+let path = require("path");
 module.exports = {
-  mode: 'production',
+  mode: "production",
   module: {
     rules: [
-      
       // this rule can be excluded if you don't require babel-loader for your other application files
       {
         test: /\.m?js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader"
         }
       },
-      
+
       // this separate rule is required to make sure that the Prebid.js files are babel-ified.  this rule will
       // override the regular exclusion from above (for being inside node_modules).
       {
         test: /.js$/,
         include: new RegExp(`\\${path.sep}prebid\.js`),
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           // presets and plugins for Prebid.js must be manually specified separate from your other babel rule.
           // this can be accomplished by requiring prebid's .babelrc.js file (requires Babel 7 and Node v8.9.0+)
-          options: require('prebid.js/.babelrc.js')
+          options: require("prebid.js/.babelrc.js")
         }
       }
     ]
   }
-}
+};
 ```
 
 Or for Babel 6 and/or Node v8.6.0 and less:
+
 ```javascript
             // you must manually install and specify the presets and plugins yourself
             options: {
               plugins: [
-                "transform-object-assign", // required (for IE support) and "babel-plugin-transform-object-assign" 
+                "transform-object-assign", // required (for IE support) and "babel-plugin-transform-object-assign"
                                            // must be installed as part of your package.
                 require('prebid.js/plugins/pbjsGlobals.js') // required!
               ],
@@ -79,7 +80,7 @@ Or for Babel 6 and/or Node v8.6.0 and less:
                 ["env", {                 // you can use other presets if you wish.
                   "targets": {            // this example is using "babel-presets-env", which must be installed if you
                     "browsers": [         // follow this example.
-                      ... // your browser targets. they should probably match the targets you're using for the rest 
+                      ... // your browser targets. they should probably match the targets you're using for the rest
                           // of your application
                     ]
                   }
@@ -102,8 +103,6 @@ prebid.requestBids({
 
 ```
 
-
-
 <a name="Install"></a>
 
 ## Install
@@ -112,16 +111,15 @@ prebid.requestBids({
     $ cd Prebid.js
     $ npm install
 
-*Note:* You need to have `NodeJS` 6.x or greater installed.
+_Note:_ You need to have `NodeJS` 6.x or greater installed.
 
-*Note:* In the 1.24.0 release of Prebid.js we have transitioned to using gulp 4.0 from using gulp 3.9.1.  To compily with gulp's recommended setup for 4.0, you'll need to have `gulp-cli` installed globally prior to running the general `npm install`.  This shouldn't impact any other projects you may work on that use an earlier version of gulp in it's setup.
+_Note:_ In the 1.24.0 release of Prebid.js we have transitioned to using gulp 4.0 from using gulp 3.9.1. To compily with gulp's recommended setup for 4.0, you'll need to have `gulp-cli` installed globally prior to running the general `npm install`. This shouldn't impact any other projects you may work on that use an earlier version of gulp in it's setup.
 
-If you have a previous version of `gulp` installed globally, you'll need to remove it before installing `gulp-cli`.  You can check if this is installed by running `gulp -v` and seeing the version that's listed in the `CLI` field of the output.  If you have the `gulp` package installd globally, it's likely the same version that you'll see in the `Local` field.  If you already have `gulp-cli` installed, it should be a lower major version (it's at version `2.0.1` at the time of the transition).
+If you have a previous version of `gulp` installed globally, you'll need to remove it before installing `gulp-cli`. You can check if this is installed by running `gulp -v` and seeing the version that's listed in the `CLI` field of the output. If you have the `gulp` package installd globally, it's likely the same version that you'll see in the `Local` field. If you already have `gulp-cli` installed, it should be a lower major version (it's at version `2.0.1` at the time of the transition).
 
 To remove the old package, you can use the command: `npm rm gulp -g`
 
 Once setup, run the following command to globally install the `gulp-cli` package: `npm install gulp-cli -g`
-
 
 <a name="Build"></a>
 
@@ -133,16 +131,16 @@ To build the project on your local machine, run:
 
 This runs some code quality checks, starts a web server at `http://localhost:9999` serving from the project root and generates the following files:
 
-+ `./build/dev/prebid.js` - Full source code for dev and debug
-+ `./build/dev/prebid.js.map` - Source map for dev and debug
-+ `./build/dist/prebid.js` - Minified production code
-+ `./prebid.js_<version>.zip` - Distributable zip archive
+- `./build/dev/prebid.js` - Full source code for dev and debug
+- `./build/dev/prebid.js.map` - Source map for dev and debug
+- `./build/dist/prebid.js` - Minified production code
+- `./prebid.js_<version>.zip` - Distributable zip archive
 
 ### Build Optimization
 
 The standard build output contains all the available modules from within the `modules` folder.
 
-You might want to exclude some/most of them from the final bundle.  To make sure the build only includes the modules you want, you can specify the modules to be included with the `--modules` CLI argument.
+You might want to exclude some/most of them from the final bundle. To make sure the build only includes the modules you want, you can specify the modules to be included with the `--modules` CLI argument.
 
 For example, when running the serve command: `gulp serve --modules=openxBidAdapter,rubiconBidAdapter,sovrnBidAdapter`
 
@@ -154,18 +152,15 @@ Building with just these adapters will result in a smaller bundle which should a
 - Then run the build:
 
         $ gulp build --modules=openxBidAdapter,rubiconBidAdapter,sovrnBidAdapter
-        
+
 Alternatively, a `.json` file can be specified that contains a list of modules you would like to include.
 
     $ gulp build --modules=modules.json
-        
+
 With `modules.json` containing the following
+
 ```json modules.json
-[
-  "openxBidAdapter",
-  "rubiconBidAdapter",
-  "sovrnBidAdapter"
-]
+["openxBidAdapter", "rubiconBidAdapter", "sovrnBidAdapter"]
 ```
 
 **Build prebid.js using npm for bundling**
@@ -182,7 +177,7 @@ Most likely your custom `prebid.js` will only change when there's:
 - A change in your list of modules
 - A new release of `prebid.js`
 
-Having said that, you are probably safe to check your custom bundle into your project.  You can also generate it in your build process.
+Having said that, you are probably safe to check your custom bundle into your project. You can also generate it in your build process.
 
 <a name="Run"></a>
 
@@ -216,11 +211,13 @@ For development:
 
 ```javascript
 (function() {
-    var d = document, pbs = d.createElement('script'), pro = d.location.protocol;
-    pbs.type = 'text/javascript';
-    pbs.src = ((pro === 'https:') ? 'https' : 'http') + './build/dev/prebid.js';
-    var target = document.getElementsByTagName('head')[0];
-    target.insertBefore(pbs, target.firstChild);
+  var d = document,
+    pbs = d.createElement("script"),
+    pro = d.location.protocol;
+  pbs.type = "text/javascript";
+  pbs.src = (pro === "https:" ? "https" : "http") + "./build/dev/prebid.js";
+  var target = document.getElementsByTagName("head")[0];
+  target.insertBefore(pbs, target.firstChild);
 })();
 ```
 
@@ -228,11 +225,13 @@ For deployment:
 
 ```javascript
 (function() {
-    var d = document, pbs = d.createElement('script'), pro = d.location.protocol;
-    pbs.type = 'text/javascript';
-    pbs.src = ((pro === 'https:') ? 'https' : 'http') + './build/dist/prebid.js';
-    var target = document.getElementsByTagName('head')[0];
-    target.insertBefore(pbs, target.firstChild);
+  var d = document,
+    pbs = d.createElement("script"),
+    pro = d.location.protocol;
+  pbs.type = "text/javascript";
+  pbs.src = (pro === "https:" ? "https" : "http") + "./build/dist/prebid.js";
+  var target = document.getElementsByTagName("head")[0];
+  target.insertBefore(pbs, target.firstChild);
 })();
 ```
 
@@ -248,7 +247,7 @@ directory you will have sourcemaps available in your browser's developer tools.
 
 To run the example file, go to:
 
-+ `http://localhost:9999/integrationExamples/gpt/pbjs_example_gpt.html`
+- `http://localhost:9999/integrationExamples/gpt/pbjs_example_gpt.html`
 
 As you make code changes, the bundles will be rebuilt and the page reloaded automatically.
 
@@ -280,11 +279,11 @@ If you are contributing code, you should [configure your editor](http://eslint.o
 
 This will run tests and keep the Karma test browser open. If your `prebid.js` file is sourced from the `./build/dev` directory you will also have sourcemaps available when using your browser's developer tools.
 
-+ To access the Karma debug page, go to `http://localhost:9876/debug.html`
+- To access the Karma debug page, go to `http://localhost:9876/debug.html`
 
-+ For test results, see the console
+- For test results, see the console
 
-+ To set breakpoints in source code, see the developer tools
+- To set breakpoints in source code, see the developer tools
 
 Detailed code coverage reporting can be generated explicitly with
 
@@ -294,7 +293,7 @@ The results will be in
 
         ./build/coverage
 
-*Note*: Starting in June 2016, all pull requests to Prebid.js need to include tests with greater than 80% code coverage before they can be merged.  For more information, see [#421](https://github.com/prebid/Prebid.js/issues/421).
+_Note_: Starting in June 2016, all pull requests to Prebid.js need to include tests with greater than 80% code coverage before they can be merged. For more information, see [#421](https://github.com/prebid/Prebid.js/issues/421).
 
 For instructions on writing tests for Prebid.js, see [Testing Prebid.js](http://prebid.org/dev-docs/testing-prebid.html).
 
@@ -303,4 +302,5 @@ For instructions on writing tests for Prebid.js, see [Testing Prebid.js](http://
 Prebid.js is supported on IE11 and modern browsers.
 
 ### Governance
+
 Review our governance model [here](https://github.com/prebid/Prebid.js/tree/master/governance.md).
